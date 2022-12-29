@@ -436,46 +436,44 @@ problem.addConstraint(
     ("b1", "b2", "b3", "b4", "b5", "a2"),
 )
 problem.addConstraint(
-    lambda x1, x2, x3, x4, x5, var: (x1 != var)
-    & (x2 != var)
-    & (x3 != var)
-    & (x4 != var)
-    & (x5 != var),
+    lambda x1, x2, x3, x4, x5, var: (
+        (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+    ),
     ("b1", "b2", "b3", "b4", "b5", "a1"),
 )
 
-# C
-problem.addVariable("c1", x)
-problem.addVariable("c2", alphabet)
-problem.addVariable("c3", k)
-problem.addVariable("c4", alphabet)
-problem.addVariable("c5", k)
-
-problem.addConstraint(
-    lambda x1, x2, x3, x4, x5: in_corpus(x1, x2, x3, x4, x5),
-    ("c1", "c2", "c3", "c4", "c5"),
-)
-
-problem.addConstraint(
-    lambda x1, x2, x3, x4, x5, var: (
-        (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-    ),
-    ("c1", "c2", "c3", "c4", "c5", "a4"),
-)
-
-problem.addConstraint(
-    lambda x1, x2, x3, x4, x5, var: (
-        (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-    ),
-    ("c1", "c2", "c3", "c4", "c5", "a1"),
-)
-
-problem.addConstraint(
-    lambda x1, x2, x3, x4, x5, var: (
-        (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-    ),
-    ("c1", "c2", "c3", "c4", "c5", "b2"),
-)
+# # C
+# problem.addVariable("c1", x)
+# problem.addVariable("c2", alphabet)
+# problem.addVariable("c3", k)
+# problem.addVariable("c4", alphabet)
+# problem.addVariable("c5", k)
+#
+# problem.addConstraint(
+#     lambda x1, x2, x3, x4, x5: in_corpus(x1, x2, x3, x4, x5),
+#     ("c1", "c2", "c3", "c4", "c5"),
+# )
+#
+# problem.addConstraint(
+#     lambda x1, x2, x3, x4, x5, var: (
+#         (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+#     ),
+#     ("c1", "c2", "c3", "c4", "c5", "a4"),
+# )
+#
+# problem.addConstraint(
+#     lambda x1, x2, x3, x4, x5, var: (
+#         (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+#     ),
+#     ("c1", "c2", "c3", "c4", "c5", "a1"),
+# )
+#
+# problem.addConstraint(
+#     lambda x1, x2, x3, x4, x5, var: (
+#         (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+#     ),
+#     ("c1", "c2", "c3", "c4", "c5", "b2"),
+# )
 
 # # D
 # problem.addVariable("d1", x)
@@ -531,14 +529,14 @@ problem.addConstraint(
 
 # K
 problem.addConstraint(
-    lambda x1, x2, x3, x4: x1 == x2 == x3 == x4,
-    ("a3", "b1", "c3", "c5"),
+    lambda x1, x2: x1 == x2,
+    ("a3", "b1"),
 )
 
 # X
 problem.addConstraint(
-    lambda x1, x2, x3: x1 == x2 == x3,
-    ("a5", "b5", "c1"),
+    lambda x1, x2: x1 == x2,
+    ("a5", "b5"),
 )
 
 # Y
@@ -556,10 +554,10 @@ words_found_b = [
     solution["b1"] + solution["b2"] + solution["b3"] + solution["b4"] + solution["b5"]
     for solution in solutions
 ]
-words_found_c = [
-    solution["c1"] + solution["c2"] + solution["c3"] + solution["c4"] + solution["c5"]
-    for solution in solutions
-]
+# words_found_c = [
+#     solution["c1"] + solution["c2"] + solution["c3"] + solution["c4"] + solution["c5"]
+#     for solution in solutions
+# ]
 print(words_found)
 print(words_found_b)
-print(words_found_c)
+# print(words_found_c)

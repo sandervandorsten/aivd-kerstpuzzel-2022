@@ -1580,19 +1580,24 @@ corpus_lower = list(
 letters_unique_indices = [
     i for i, word in enumerate(corpus_lower) if len(set(word)) == len(word)
 ]
-unique_words = [corpus_lower[letter] for letter in letters_unique_indices]
-
-z = list(set([word[0] for word in unique_words]))
-w = list(set([word[1] for word in unique_words]))
-k = list(set([word[2] for word in unique_words]))
-y = list(set([word[3] for word in unique_words]))
-x = list(set([word[4] for word in unique_words]))
-yw = list(set(y + w))
+# unique_words = [corpus_lower[letter] for letter in letters_unique_indices]
+#
+# z = list(set([word[0] for word in unique_words]))
+# w = list(set([word[1] for word in unique_words]))
+# k = list(set([word[2] for word in unique_words]))
+# y = list(set([word[3] for word in unique_words]))
+# x = list(set([word[4] for word in unique_words]))
+z = list(string.ascii_lowercase)
+w = list(string.ascii_lowercase)
+k = list(string.ascii_lowercase)
+y = list(string.ascii_lowercase)
+x = list(string.ascii_lowercase)
+yw = list(string.ascii_lowercase)
 alphabet = list(string.ascii_lowercase)
 
 
-def word_unique(x1, x2, x3, x4, x5):
-    return x1 + x2 + x3 + x4 + x5 in unique_words
+# def word_unique(x1, x2, x3, x4, x5):
+#     return x1 + x2 + x3 + x4 + x5 in unique_words
 
 
 def in_corpus(x1, x2, x3, x4, x5):
@@ -1611,7 +1616,7 @@ def add_a():
     problem.addVariable("a5", x)
 
     problem.addConstraint(
-        lambda x1, x2, x3, x4, x5: word_unique(x1, x2, x3, x4, x5),
+        lambda x1, x2, x3, x4, x5: in_corpus(x1, x2, x3, x4, x5),
         ("a1", "a2", "a3", "a4", "a5"),
     )
 
@@ -1925,10 +1930,10 @@ def add_g():
 add_a()
 add_b()
 add_c()
-add_d()
+# add_d()
 # add_e()
 # add_f()
-# add_g()
+add_g()
 
 
 print("Finding 1 solution...")

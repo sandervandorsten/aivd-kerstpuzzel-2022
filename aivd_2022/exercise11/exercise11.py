@@ -1,3 +1,5 @@
+import json
+
 from constraint import *
 import string
 from preprocess_data import retrieve_corpus
@@ -10,7 +12,10 @@ def in_corpus(x1, x2, x3, x4, x5, corpus):
     return x1 + x2 + x3 + x4 + x5 in corpus
 
 
-def csp(corpus, vars: list[str]):
+def csp(corpus, corpora: list[str], vars: list[str], iterative: bool = False):
+    start_time = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    corpora_str = "_".join(corpora)
+
     # word subsets
     z = list(set([word[0] for word in corpus]))
     w = list(set([word[1] for word in corpus]))
@@ -367,7 +372,18 @@ def csp(corpus, vars: list[str]):
 
     print("Finding all solutions...")
     start = dt.datetime.now()
-    solutions = problem.getSolutions()
+
+    if iterative:
+        solutions = []
+        for solution in problem.getSolutionIter():
+            print(solution)
+            solutions.append(solution)
+            with open(
+                f"export/{start_time}-{corpora_str}-{''.join(vars)}.jsonlines", "a"
+            ) as f:
+                f.write(json.dumps(solution) + "\n")
+    else:
+        solutions = problem.getSolutions()
     end = dt.datetime.now()
     print(f"Time taken: {(end-start).total_seconds()} seconds")
     print(f"# solutions: {len(solutions)}")
@@ -390,6 +406,22 @@ def expand_solutions(
             print(f"{col}: {words[col]}")
         except KeyError:
             words[col] = [" " * 5] * len(solutions_)
+            continue
+    return words, cols_with_data
+
+
+def expand_solution(
+    solution_: dict[str, str], columns: list[str]
+) -> tuple[dict[str, list[str]], list[str]]:
+    words = {}
+    cols_with_data = []
+    for col in columns:
+        try:
+            words[col] = ["".join([solution_[f"{col}{i}"] for i in range(1, 6)])]
+            cols_with_data.append(col)
+            print(f"{col}: {words[col]}")
+        except KeyError:
+            words[col] = [" " * 5]
             continue
     return words, cols_with_data
 
@@ -454,6 +486,7 @@ def export(words, cols_with_data, corpora: list[str]):
 
 
 def main():
+    iterative = True
     corpora = ["LINGO", "MWB", "WORDFEUD"]
     corpus = retrieve_corpus(datasets=corpora)
     print(f"Using Corpora: {corpora}")
@@ -461,7 +494,7 @@ def main():
     columns = list("abcdefg")
 
     # Postprocess words into solution
-    solutions = csp(corpus, vars=list("abcdefg"))
+    solutions = csp(corpus, corpora=corpora, vars=list("abcg"), iterative=iterative)
     words, cols_with_data = expand_solutions(solutions, columns)
 
     words = add_missing_data(words, columns, cols_with_data)

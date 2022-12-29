@@ -1587,6 +1587,7 @@ w = list(set([word[1] for word in unique_words]))
 k = list(set([word[2] for word in unique_words]))
 y = list(set([word[3] for word in unique_words]))
 x = list(set([word[4] for word in unique_words]))
+yw = list(set(y + w))
 alphabet = list(string.ascii_lowercase)
 
 
@@ -1678,7 +1679,6 @@ def add_c():
         ("c1", "c2", "c3", "c4", "c5", "a4"),
     )
 
-    # TODO Deze constraint vind ie heel moeilijk, nakijken
     problem.addConstraint(
         lambda x1, x2, x3, x4, x5, var: (
             (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
@@ -1686,7 +1686,6 @@ def add_c():
         ("c1", "c2", "c3", "c4", "c5", "a1"),
     )
 
-    # TODO Deze constraint vind ie heel moeilijk, nakijken
     problem.addConstraint(
         lambda x1, x2, x3, x4, x5, var: (
             (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
@@ -1741,49 +1740,174 @@ def add_d():
         ("d1", "d2", "d3", "d4", "d5", "a1"),
     )
 
-
-#
-# # E
-# problem.addVariable("e1", x)
-# problem.addVariable("e2", alphabet)
-# problem.addVariable("e3", k)
-# problem.addVariable("e4", alphabet)
-# problem.addVariable("e5", k)
-#
-# problem.addConstraint(
-#     lambda x1, x2, x3, x4, x5: in_corpus(x1, x2, x3, x4, x5),
-#     ("e1", "e2", "e3", "e4", "e5"),
-# )
+    # Alpha
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("d2", "c2"),
+    )
 
 
-# F
-# problem.addVariable("f1", x)
-# problem.addVariable("f2", alphabet)
-# problem.addVariable("f3", k)
-# problem.addVariable("f4", alphabet)
-# problem.addVariable("f5", k)
-#
-# problem.addConstraint(
-#     lambda x1, x2, x3, x4, x5: in_corpus(x1, x2, x3, x4, x5),
-#     ("f1", "f2", "f3", "f4", "f5"),
-# )
+def add_e():
+    # E
+    problem.addVariable("e1", k)
+    problem.addVariable("e2", alphabet)
+    problem.addVariable("e3", z)
+    problem.addVariable("e4", k)
+    problem.addVariable("e5", yw)
+
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5: in_corpus(x1, x2, x3, x4, x5),
+        ("e1", "e2", "e3", "e4", "e5"),
+    )
+
+    # No Alpha in E
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5, var: (
+            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+        ),
+        ("e1", "e2", "e3", "e4", "e5", "d2"),
+    )
+
+    # No X in E
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5, var: (
+            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+        ),
+        ("e1", "e2", "e3", "e4", "e5", "a5"),
+    )
+
+    # K
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("e1", "a3"),
+    )
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("e4", "a3"),
+    )
+
+    # Z
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("e3", "a1"),
+    )
+
+    # Y or W
+    problem.addConstraint(
+        lambda x1, x2, x3: x1 == x2 or x1 == x3,
+        ("e5", "a2", "a4"),
+    )
 
 
-# G
-# problem.addVariable("g1", x)
-# problem.addVariable("g2", alphabet)
-# problem.addVariable("g3", k)
-# problem.addVariable("g4", alphabet)
-# problem.addVariable("g5", k)
-#
-# problem.addConstraint(
-#     lambda x1, x2, x3, x4, x5: in_corpus(x1, x2, x3, x4, x5),
-#     ("g1", "g2", "g3", "g4", "g5"),
-# )
+def add_f():
+    # F
+    problem.addVariable("f1", yw)
+    problem.addVariable("f2", alphabet)
+    problem.addVariable("f3", yw)
+    problem.addVariable("f4", alphabet)
+    problem.addVariable("f5", x)
+
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5: in_corpus(x1, x2, x3, x4, x5),
+        ("f1", "f2", "f3", "f4", "f5"),
+    )
+
+    # No Z in F
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5, var: (
+            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+        ),
+        ("f1", "f2", "f3", "f4", "f5", "a1"),
+    )
+
+    # No K in F
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5, var: (
+            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+        ),
+        ("f1", "f2", "f3", "f4", "f5", "a3"),
+    )
+
+    # Y or W
+    problem.addConstraint(
+        lambda x1, x2, x3: x1 == x2 or x1 == x3,
+        ("f1", "a2", "a4"),
+    )
+    problem.addConstraint(
+        lambda x1, x2, x3: x1 == x2 or x1 == x3,
+        ("f3", "a2", "a4"),
+    )
+
+    # X
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("a5", "f5"),
+    )
+
+    # TODO: Contains a Y?
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, var: (
+            (x1 == var) or (x2 == var) or (x3 == var) or (x4 == var)
+        ),
+        ("f1", "f2", "f3", "f4", "a4"),
+    )
+
+
+def add_g():
+    problem.addVariable("g1", z)
+    problem.addVariable("g2", k)
+    problem.addVariable("g3", alphabet)
+    problem.addVariable("g4", alphabet)
+    problem.addVariable("g5", alphabet)
+
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5: in_corpus(x1, x2, x3, x4, x5),
+        ("g1", "g2", "g3", "g4", "g5"),
+    )
+
+    # No X in G
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5, var: (
+            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+        ),
+        ("g1", "g2", "g3", "g4", "g5", "a5"),
+    )
+
+    # No Y in G
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5, var: (
+            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+        ),
+        ("g1", "g2", "g3", "g4", "g5", "a4"),
+    )
+
+    # Z
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("a1", "g1"),
+    )
+
+    # K
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("a3", "g2"),
+    )
+
+    # Alpha
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("c3", "g3"),
+    )
+
 
 add_a()
 add_b()
 add_c()
+add_d()
+# add_e()
+# add_f()
+# add_g()
+
 
 print("Finding 1 solution...")
 sol1 = problem.getSolution()

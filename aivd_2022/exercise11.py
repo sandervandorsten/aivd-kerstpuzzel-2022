@@ -1582,17 +1582,12 @@ letters_unique_indices = [
 ]
 # unique_words = [corpus_lower[letter] for letter in letters_unique_indices]
 #
-# z = list(set([word[0] for word in unique_words]))
-# w = list(set([word[1] for word in unique_words]))
-# k = list(set([word[2] for word in unique_words]))
-# y = list(set([word[3] for word in unique_words]))
-# x = list(set([word[4] for word in unique_words]))
-z = list(string.ascii_lowercase)
-w = list(string.ascii_lowercase)
-k = list(string.ascii_lowercase)
-y = list(string.ascii_lowercase)
-x = list(string.ascii_lowercase)
-yw = list(string.ascii_lowercase)
+z = list(set([word[0] for word in corpus_lower]))
+w = list(set([word[1] for word in corpus_lower]))
+k = list(set([word[2] for word in corpus_lower]))
+y = list(set([word[3] for word in corpus_lower]))
+x = list(set([word[4] for word in corpus_lower]))
+yw = list(set(y + w))
 alphabet = list(string.ascii_lowercase)
 
 
@@ -1634,17 +1629,20 @@ def add_b():
         lambda x1, x2, x3, x4, x5: in_corpus(x1, x2, x3, x4, x5),
         ("b1", "b2", "b3", "b4", "b5"),
     )
+    # Geen Z op 1
     problem.addConstraint(
-        lambda x1, x2, x3, x4, x5, var: (
-            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-        ),
-        ("b1", "b2", "b3", "b4", "b5", "a2"),
+        lambda x1, var: (x1 != var),
+        ("b1", "a1"),
     )
+    # Geen W op 2
     problem.addConstraint(
-        lambda x1, x2, x3, x4, x5, var: (
-            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-        ),
-        ("b1", "b2", "b3", "b4", "b5", "a1"),
+        lambda x1, var: (x1 != var),
+        ("b2", "a2"),
+    )
+    # Geen K op 3
+    problem.addConstraint(
+        lambda x1, var: (x1 != var),
+        ("b3", "a3"),
     )
 
     # K
@@ -1680,29 +1678,37 @@ def add_c():
         ("c1", "c2", "c3", "c4", "c5"),
     )
 
+    # Geen Y in C4
     problem.addConstraint(
-        lambda x1, x2, x3, x4, x5, var: (
-            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-        ),
-        ("c1", "c2", "c3", "c4", "c5", "a4"),
+        lambda x1, var: (x1 != var),
+        ("c4", "a4"),
     )
 
+    # Alpha != Omega
     problem.addConstraint(
-        lambda x1, x2, x3, x4, x5, var: (
-            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-        ),
-        ("c1", "c2", "c3", "c4", "c5", "a1"),
+        lambda x1, x2: x1 != x2,
+        ("b2", "c2"),
     )
 
-    problem.addConstraint(
-        lambda x1, x2, x3, x4, x5, var: (
-            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-        ),
-        ("c1", "c2", "c3", "c4", "c5", "b2"),
-    )
+    # # Geen Z
+    # # TODO refactor, moet toegepast worden op alleen de onbekende cellen
+    # problem.addConstraint(
+    #     lambda x1, x2, x3, x4, x5, var: (
+    #         (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+    #     ),
+    #     ("c1", "c2", "c3", "c4", "c5", "a1"),
+    # )
+
+    # # Geen Omega
+    # # # TODO refactor, moet toegepast worden op alleen de onbekende cellen
+    # problem.addConstraint(
+    #     lambda x1, x2, x3, x4, x5, var: (
+    #         (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+    #     ),
+    #     ("c1", "c2", "c3", "c4", "c5", "b2"),
+    # )
 
     # K
-
     problem.addConstraint(
         lambda x1, x2: x1 == x2,
         ("a3", "c3"),
@@ -1734,20 +1740,16 @@ def add_d():
         ("d1", "d2", "d3", "d4", "d5"),
     )
 
-    # no X in D
+    # D1 is no X or K
     problem.addConstraint(
-        lambda x1, x2, x3, x4, x5, var: (
-            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-        ),
-        ("d1", "d2", "d3", "d4", "d5", "a5"),
+        lambda x1, var, var2: (x1 != var) & (x1 != var2),
+        ("d1", "a5", "a3"),
     )
 
-    # no Z in D
+    # D3 is no K or Z
     problem.addConstraint(
-        lambda x1, x2, x3, x4, x5, var: (
-            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-        ),
-        ("d1", "d2", "d3", "d4", "d5", "a1"),
+        lambda x1, var, var2: (x1 != var) & (x1 != var2),
+        ("d3", "a3", "a1"),
     )
 
     # Alpha
@@ -1783,27 +1785,27 @@ def add_e():
         ("e1", "e2", "e3", "e4", "e5"),
     )
 
-    # No Alpha in E
+    # No Alpha or K in E2
     problem.addConstraint(
-        lambda x1, x2, x3, x4, x5, var: (
-            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-        ),
-        ("e1", "e2", "e3", "e4", "e5", "d2"),
+        lambda x1, var, var2: (x1 != var) & (x1 != var2),
+        ("e2", "c2", "a3"),
     )
 
     # No X in E
-    problem.addConstraint(
-        lambda x1, x2, x3, x4, x5, var: (
-            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-        ),
-        ("e1", "e2", "e3", "e4", "e5", "a5"),
-    )
+    # TODO deduced/infered, not directly written down as rule.
+    # problem.addConstraint(
+    #     lambda x1, x2, x3, x4, x5, var: (
+    #         (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+    #     ),
+    #     ("e1", "e2", "e3", "e4", "e5", "a5"),
+    # )
 
     # K
     problem.addConstraint(
         lambda x1, x2: x1 == x2,
         ("e1", "a3"),
     )
+
     problem.addConstraint(
         lambda x1, x2: x1 == x2,
         ("e4", "a3"),
@@ -1853,6 +1855,14 @@ def add_f():
         ("f1", "f2", "f3", "f4", "f5", "a3"),
     )
 
+    # No Alpha in F
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5, var: (
+            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+        ),
+        ("f1", "f2", "f3", "f4", "f5", "c2"),
+    )
+
     # Y or W
     problem.addConstraint(
         lambda x1, x2, x3: x1 == x2 or x1 == x3,
@@ -1869,12 +1879,16 @@ def add_f():
         ("a5", "f5"),
     )
 
-    # TODO: Contains a Y?
+    # Contains a Y
     problem.addConstraint(
-        lambda x1, x2, x3, x4, var: (
-            (x1 == var) or (x2 == var) or (x3 == var) or (x4 == var)
-        ),
-        ("f1", "f2", "f3", "f4", "a4"),
+        lambda x1, x2, var: ((x1 == var) or (x2 == var)),
+        ("f1", "f3", "a4"),
+    )
+
+    # Contains a W
+    problem.addConstraint(
+        lambda x1, x2, var: ((x1 == var) or (x2 == var)),
+        ("f1", "f3", "a2"),
     )
 
 
@@ -1893,6 +1907,7 @@ def add_g():
     )
 
     # No X in G
+    # valid, because we can infer using Worldle 6(F) inference.
     problem.addConstraint(
         lambda x1, x2, x3, x4, x5, var: (
             (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
@@ -1901,11 +1916,18 @@ def add_g():
     )
 
     # No Y in G
+    # valid, because we can infer using Worldle 6(F) inference.
     problem.addConstraint(
         lambda x1, x2, x3, x4, x5, var: (
             (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
         ),
         ("g1", "g2", "g3", "g4", "g5", "a4"),
+    )
+
+    # Only 1K in G, so not on G4 and G5
+    problem.addConstraint(
+        lambda x1, x2, var: ((x1 != var) & (x2 != var)),
+        ("g4", "g5", "a3"),
     )
 
     # Z
@@ -1923,14 +1945,14 @@ def add_g():
     # Alpha
     problem.addConstraint(
         lambda x1, x2: x1 == x2,
-        ("c3", "g3"),
+        ("c2", "g3"),
     )
 
 
 add_a()
 add_b()
 add_c()
-# add_d()
+add_d()
 # add_e()
 # add_f()
 add_g()

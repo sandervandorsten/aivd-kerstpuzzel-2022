@@ -1,3 +1,4 @@
+import datetime as dt
 from constraint import *
 import string
 
@@ -1695,17 +1696,14 @@ def add_c():
 
     # K
 
-    # TODO hierdoor geen oplossingen meer met huidge corpus
-    # problem.addConstraint(
-    #     lambda x1, x2: x1 == x2,
-    #     ("a3", "c3"),
-    # )
-    #
-    # # TODO hierdoor geen oplossingen meer met huidge corpus
-    # problem.addConstraint(
-    #     lambda x1, x2: x1 == x2,
-    #     ("a3", "c5"),
-    # )
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("a3", "c3"),
+    )
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("a3", "c5"),
+    )
 
     # X
     problem.addConstraint(
@@ -1785,12 +1783,19 @@ def add_d():
 
 add_a()
 add_b()
+add_c()
 
-print("starting solving...")
+print("Finding 1 solution...")
 sol1 = problem.getSolution()
 print(sol1)
+print("Finding 1 solution complete...")
 
+print("Finding all solutions...")
+start = dt.datetime.now()
 solutions = problem.getSolutions()
+end = dt.datetime.now()
+print(f"Time taken: {(end-start).total_seconds()} seconds")
+print(f"# solutions: {len(solutions)}")
 
 for col in list("abcdefg"):
     try:

@@ -1603,6 +1603,7 @@ problem = Problem()
 
 
 def add_a():
+    print("Adding A...")
     problem.addVariable("a1", z)
     problem.addVariable("a2", w)
     problem.addVariable("a3", k)
@@ -1616,6 +1617,7 @@ def add_a():
 
 
 def add_b():
+    print("Adding B...")
     # B
     problem.addVariable("b1", k)
     problem.addVariable("b2", alphabet)
@@ -1661,6 +1663,7 @@ def add_b():
 
 # C
 def add_c():
+    print("Adding C...")
     problem.addVariable("c1", x)
     problem.addVariable("c2", alphabet)
     problem.addVariable("c3", k)
@@ -1712,6 +1715,8 @@ def add_c():
 
 
 def add_d():
+    print("Adding D...")
+
     # D
     problem.addVariable("d1", alphabet)
     problem.addVariable("d2", alphabet)
@@ -1746,8 +1751,21 @@ def add_d():
         ("d2", "c2"),
     )
 
+    # K
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("d4", "a3"),
+    )
+
+    problem.addConstraint(
+        lambda x1, x2: x1 == x2,
+        ("d5", "a3"),
+    )
+
 
 def add_e():
+    print("Adding E...")
+
     # E
     problem.addVariable("e1", k)
     problem.addVariable("e2", alphabet)
@@ -1800,6 +1818,8 @@ def add_e():
 
 
 def add_f():
+    print("Adding F...")
+
     # F
     problem.addVariable("f1", yw)
     problem.addVariable("f2", alphabet)
@@ -1854,6 +1874,8 @@ def add_f():
 
 
 def add_g():
+    print("Adding G...")
+
     problem.addVariable("g1", z)
     problem.addVariable("g2", k)
     problem.addVariable("g3", alphabet)

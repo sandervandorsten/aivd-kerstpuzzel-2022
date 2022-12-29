@@ -1952,10 +1952,10 @@ def add_g():
 add_a()
 add_b()
 add_c()
-add_d()
-# add_e()
-# add_f()
-add_g()
+# add_d()
+add_e()
+add_f()
+# add_g()
 
 
 print("Finding 1 solution...")
@@ -1970,12 +1970,78 @@ end = dt.datetime.now()
 print(f"Time taken: {(end-start).total_seconds()} seconds")
 print(f"# solutions: {len(solutions)}")
 
-for col in list("abcdefg"):
+words = {}
+columns = list("abcdefg")
+cols_with_data = []
+for col in columns:
     try:
-        words_found = [
+        words[col] = [
             "".join([solution[f"{col}{i}"] for i in range(1, 6)])
             for solution in solutions
         ]
-        print(f"{col}: {words_found}")
+        cols_with_data.append(col)
+        print(f"{col}: {words[col]}")
     except KeyError:
+        words[col] = [" " * 5] * len(solutions)
         continue
+
+
+def replace(words: dict[str, list[str]], col: str, alt: str, col_i: int, alt_i: int):
+    if col_i > 5 or alt_i > 5:
+        raise ValueError("Index to High")
+    return [
+        col[:col_i] + alt[alt_i] + col[col_i + 1 :]
+        for col, alt in zip(words[col], words[alt])
+    ]
+
+
+# add in data for which we didn't fill using the solver
+for col in sorted(list(set(columns) - set(cols_with_data))):
+    # if col == 'b':
+    # words[col] = [word[] for word in words[col]]
+    if col == "d":
+        # replace d2 with c2
+        words[col] = replace(words, col=col, alt="c", col_i=1, alt_i=1)
+        # replace d4 with a3
+        words[col] = replace(words, col=col, alt="a", col_i=3, alt_i=2)
+        # replace d5 with a3
+        words[col] = replace(words, col=col, alt="a", col_i=4, alt_i=2)
+    elif col == "e":
+        # replace e1 with a3
+        words[col] = replace(words, col=col, alt="a", col_i=0, alt_i=2)
+        # replace e3 with a1
+        words[col] = replace(words, col=col, alt="a", col_i=2, alt_i=0)
+        # replace e4 with a3
+        words[col] = replace(words, col=col, alt="a", col_i=3, alt_i=2)
+    elif col == "f":
+        # replace f5 with a5
+        words[col] = replace(words, col=col, alt="a", col_i=4, alt_i=4)
+    elif col == "g":
+        # replace g1 with a1
+        words[col] = replace(words, col=col, alt="a", col_i=0, alt_i=0)
+        # replace g2 with a3
+        words[col] = replace(words, col=col, alt="a", col_i=1, alt_i=2)
+        # replace g3 with c2
+        words[col] = replace(words, col=col, alt="c", col_i=2, alt_i=1)
+
+# Create final words
+final_words = []
+for a, b, c, d, e, f in zip(*[words[col] for col in columns[:-1]]):
+    print(a, b, c, d, e, f)
+    s0 = a[0]
+    s1 = b[1]
+    s2 = c[1]
+    s3 = d[4]
+    s4 = e[1]
+    s5 = f[3]
+    final_words.append(s0 + s1 + s2 + s3 + s4 + s5)
+
+words["final"] = final_words
+
+# Export to excel
+import pandas as pd
+import datetime as dt
+
+now = dt.datetime.now().strftime("%Y%m%d %H%M%S")
+data = pd.DataFrame(data=words).T
+data.to_excel(f"exercise11-{''.join(cols_with_data)}-{now}.xlsx")

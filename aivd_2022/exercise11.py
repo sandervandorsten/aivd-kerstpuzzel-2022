@@ -1679,20 +1679,20 @@ def add_c():
     )
 
     # TODO Deze constraint vind ie heel moeilijk, nakijken
-    # problem.addConstraint(
-    #     lambda x1, x2, x3, x4, x5, var: (
-    #         (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-    #     ),
-    #     ("c1", "c2", "c3", "c4", "c5", "a1"),
-    # )
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5, var: (
+            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+        ),
+        ("c1", "c2", "c3", "c4", "c5", "a1"),
+    )
 
     # TODO Deze constraint vind ie heel moeilijk, nakijken
-    # problem.addConstraint(
-    #     lambda x1, x2, x3, x4, x5, var: (
-    #         (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
-    #     ),
-    #     ("c1", "c2", "c3", "c4", "c5", "b2"),
-    # )
+    problem.addConstraint(
+        lambda x1, x2, x3, x4, x5, var: (
+            (x1 != var) & (x2 != var) & (x3 != var) & (x4 != var) & (x5 != var)
+        ),
+        ("c1", "c2", "c3", "c4", "c5", "b2"),
+    )
 
     # K
 

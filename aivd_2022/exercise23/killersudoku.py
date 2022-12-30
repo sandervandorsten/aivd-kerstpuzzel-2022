@@ -37,23 +37,35 @@ class Variable(object):
         if isinstance(other, Variable):
             return self.value.__eq__(other.value)
         else:
-            print(f"equality check for var {other} with type {type(other}}")
+            print(f"equality check for var {other} with type {type(other)}")
             return self.value.__eq__(other)
+
+    def __hash__(self):
+        return self.name.__hash__()
+
     def __neq__(self, other):
         if isinstance(other, Variable):
             return not self.value.__eq__(other.value)
         else:
-            print(f"non-equality check for var {other} with type {type(other}}")
+            print(f"non-equality check for var {other} with type {type(other)}")
             return not self.value.__eq__(other)
 
     def __add__(self, other):
-        return Variable(name=self.name, value=self.value.__add__(other.value))
+        if isinstance(other, Variable):
+            return Variable(name=self.name, value=self.value + other.value)
+        else:
+            print(f"addition for var {other} with type {type(other)}")
+            return Variable(name=self.name, value=self.value + other)
 
     def __radd__(self, other):
-        return other.value.__add__(self.value)
+        return other + self.value
 
     def __mul__(self, other):
-        return Variable(name=self.name, value=self.value.__mul__(other.value))
+        if isinstance(other, Variable):
+            return Variable(name=self.name, value=self.value * other.value)
+        else:
+            print(f"multiplication for var {other} with type {type(other)}")
+            return Variable(name=self.name, value=self.value * other)
 
     def __rmul__(self, other):
         return other.value.__mul__(self.value)
@@ -62,22 +74,38 @@ class Variable(object):
         return Variable(name=self.name, value=self.value.__floordiv__(other.value))
 
     def __sub__(self, other):
-        return Variable(name=self.name, value=self.value.__sub__(other.value))
+        if isinstance(other, Variable):
+            return Variable(name=self.name, value=self.value - other.value)
+        else:
+            print(f"subtraction for var {other} with type {type(other)}")
+            return Variable(name=self.name, value=self.value - other)
 
     def __rsub__(self, other):
-        return other.__sub__(self.value)
+        return other - self.value
 
     def __le__(self, other):
-        return self.value.__le__(other.value)
+        if isinstance(other, Variable):
+            return self.value <= other.value
+        else:
+            return self.value <= other
 
     def __lt__(self, other):
-        return self.value.__lt__(other.value)
+        if isinstance(other, Variable):
+            return self.value < other.value
+        else:
+            return self.value < other
 
     def __gt__(self, other):
-        return self.value.__gt__(other.value)
+        if isinstance(other, Variable):
+            return self.value > other.value
+        else:
+            return self.value > other
 
     def __ge__(self, other):
-        return self.value.__ge__(other.value)
+        if isinstance(other, Variable):
+            return self.value >= other.value
+        else:
+            return self.value >= other
 
 
 def main():
@@ -101,22 +129,22 @@ def main():
     }
 
     pieces_vars = {
-        Variable(name="WK", value= 100),
-        Variable(name="WQ", value= 10),
-        Variable(name="WI", value= 6),  # Nightrider
-        Variable(name="WR", value= 5),
-        Variable(name="WB", value= 3),
-        Variable(name="WN", value= 3),
-        Variable(name="WG", value= 2),  # Grasshopper (inverted queen)
-        Variable(name="WP", value= 1),
-        Variable(name="BK", value= -100),
-        Variable(name="BQ", value= -10),
-        Variable(name="BI", value= -6),  # Nightrider
-        Variable(name="BR", value= -5),
-        Variable(name="BB", value= -3),
-        Variable(name="BN", value= -3),
-        Variable(name="BG", value= -2),  # Grasshopper (inverted queen)
-        Variable(name="BP", value= -1),
+        "WK": Variable(name="WK", value=100),
+        "WQ": Variable(name="WQ", value=10),
+        "WI": Variable(name="WI", value=6),  # Nightrider
+        "WR": Variable(name="WR", value=5),
+        "WB": Variable(name="WB", value=3),
+        "WN": Variable(name="WN", value=3),
+        "WG": Variable(name="WG", value=2),  # Grasshopper (inverted queen)
+        "WP": Variable(name="WP", value=1),
+        "BK": Variable(name="BK", value=-100),
+        "BQ": Variable(name="BQ", value=-10),
+        "BI": Variable(name="BI", value=-6),  # Nightrider
+        "BR": Variable(name="BR", value=-5),
+        "BB": Variable(name="BB", value=-3),
+        "BN": Variable(name="BN", value=-3),
+        "BG": Variable(name="BG", value=-2),  # Grasshopper (inverted queen)
+        "BP": Variable(name="BP", value=-1),
     }
 
     problem = Problem()
@@ -136,19 +164,19 @@ def main():
     # problem.addVariable("g5", [pieces["WP"]])
     # problem.addVariable("f7", [pieces["BP"]])
     # problem.addVariable("g7", [pieces["WR"]])
-    # problem.addVariable("e1", [pieces["WK"]])
-    # problem.addVariable("g1", [pieces["BK"]])
-    # problem.addVariable("e2", [pieces["WP"]])
-    # problem.addVariable("h2", [pieces["BP"]])
-    # problem.addVariable("f3", [pieces["WB"]])
-    # problem.addVariable("h1", [pieces["WN"]])  # White Knight moved from g3 to h1
-    # problem.addVariable("g5", [pieces["WP"]])
-    # problem.addVariable("f7", [pieces["BP"]])
-    # problem.addVariable("g7", [pieces["WR"]])
+    # problem.addVariable("e1", [pieces_vars["WK"]])
+    # problem.addVariable("g1", [pieces_vars["BK"]])
+    # problem.addVariable("e2", [pieces_vars["WP"]])
+    # problem.addVariable("h2", [pieces_vars["BP"]])
+    # problem.addVariable("f3", [pieces_vars["WB"]])
+    # problem.addVariable("h1", [pieces_vars["WN"]])  # White Knight moved from g3 to h1
+    # problem.addVariable("g5", [pieces_vars["WP"]])
+    # problem.addVariable("f7", [pieces_vars["BP"]])
+    # problem.addVariable("g7", [pieces_vars["WR"]])
 
     # fill all variables with default domain
     undeclared_vars = [var for var in variables if var not in problem._variables]
-    problem.addVariables(undeclared_vars, list(pieces.values()))
+    problem.addVariables(undeclared_vars, list(pieces_vars.values()))
 
     # Constraints
 

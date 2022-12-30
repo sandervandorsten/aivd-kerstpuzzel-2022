@@ -494,7 +494,7 @@ def main():
     columns = list("abcdefg")
 
     # Postprocess words into solution
-    solutions = csp(corpus, corpora=corpora, vars=list("abcg"), iterative=iterative)
+    solutions = csp(corpus, corpora=corpora, vars=list("abcefg"), iterative=iterative)
     words, cols_with_data = expand_solutions(solutions, columns)
 
     words = add_missing_data(words, columns, cols_with_data)

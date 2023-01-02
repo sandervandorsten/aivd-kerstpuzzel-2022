@@ -3,7 +3,7 @@ from itertools import product
 import datetime as dt
 from pathlib import Path
 
-from constraint import Problem, AllDifferentConstraint, ExactSumConstraint, Constraint
+from constraint import *
 
 pieces = {
     "WK": 100,
@@ -229,8 +229,9 @@ def main():
     #     "BG": Variable(name="BG", value=-2),  # Grasshopper (inverted queen)
     #     "BP": Variable(name="BP", value=-1),
     # }
-
-    problem = Problem()
+    solver = BacktrackingSolver()
+    print(f"solver = {type(solver).__name__}")
+    problem = Problem(solver=solver)
     # Create 8x8 variables
 
     variables = ["".join(x) for x in product(columns, rows)]
@@ -295,28 +296,32 @@ def main():
         Cage(vars=["b3", "b2"], sum=0),
         Cage(vars=["c3", "c4"], sum=0),
         Cage(vars=["e3", "f3", "g3", "h3"], sum=-14),
-        # Cage(vars=["b4", "c4"], sum=0), # Difficult, might be because of the -3 +3 thing?
+        # Cage(vars=["b4", "c4"], sum=0),  # Difficult
         Cage(vars=["e4", "f4", "f5"], sum=13),
         Cage(vars=["a5", "a4", "b5"], sum=-5),
         Cage(vars=["g5", "g4", "h4", "h5"], sum=18),
         Cage(vars=["a6", "b6"], sum=-1),
         Cage(vars=["c6", "c5"], sum=-4),
-        # Cage(vars=["d6", "d5", "d4", "e6", "e5"], sum=-102), # Difficult
-        Cage(vars=["g6", "h6"], sum=-13),
+        # Cage(vars=["d6", "d5", "d4", "e6", "e5"], sum=-102),  # Difficult
         Cage(vars=["b7", "c7", "d7"], sum=14),
         Cage(vars=["e7", "f7", "f6"], sum=-1),
         Cage(vars=["a8", "b8", "a7"], sum=92),
-        Cage(vars=["c8", "d8", "e8", "f8"], sum=0),
+        Cage(vars=["c8", "d8", "e8", "f8"], sum=0),  # Difficult
         Cage(vars=["g8", "h8", "g7", "h7"], sum=0),
     ]
+    print(f"#n cages: {len(cages)}")
     for cage in cages:
         problem.addConstraint(AllDifferentConstraint(), cage.vars)
         problem.addConstraint(RoundedSumConstraint(cage.sum), cage.vars)
 
-    for i, solution in enumerate(problem.getSolutionIter()):
-        if i > 10000:
-            break
-        export(solution, i, start_time, len(cages))
+    if isinstance(solver, BacktrackingSolver):
+        for i, solution in enumerate(problem.getSolutionIter()):
+            if i > 10000:
+                break
+            export(solution, i, start_time, len(cages))
+    else:
+        solution = problem.getSolution()
+        export(solution, 0, start_time, len(cages))
 
 
 def export(
@@ -332,7 +337,7 @@ def export(
         for col in columns:
             string += pieces_inv[solution[f"{col}{row}"]] + "\t"
         string += "\n"
-        print(string)
+    print(string)
     with open(path, "w") as f:
         f.write(string)
 

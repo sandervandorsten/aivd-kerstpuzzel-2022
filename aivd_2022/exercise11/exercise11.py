@@ -403,7 +403,7 @@ def expand_solutions(
                 for solution in solutions_
             ]
             cols_with_data.append(col)
-            print(f"{col}: {words[col]}")
+            # print(f"{col}: {words[col]}")
         except KeyError:
             words[col] = [" " * 5] * len(solutions_)
             continue
@@ -419,7 +419,7 @@ def expand_solution(
         try:
             words[col] = ["".join([solution_[f"{col}{i}"] for i in range(1, 6)])]
             cols_with_data.append(col)
-            print(f"{col}: {words[col]}")
+            # print(f"{col}: {words[col]}")
         except KeyError:
             words[col] = [" " * 5]
             continue
@@ -469,7 +469,7 @@ def add_final_words(words_: dict[str, list[str]], columns) -> dict[str, list[str
     """Create final words and add"""
     final_words = []
     for a, b, c, d, e, f in zip(*[words_[col] for col in columns[:-1]]):
-        print(a, b, c, d, e, f)
+        # print(a, b, c, d, e, f)
         final_words.append(a[0] + b[1] + c[1] + d[4] + e[1] + f[3])
 
     words_["final"] = final_words
@@ -482,6 +482,8 @@ def export(words, cols_with_data, corpora: list[str]):
     cols_str = "".join(list(cols_with_data))
     now = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
     data = pd.DataFrame(data=words).T
+    # Select max number of columns
+    data = data.iloc[:, :16384]
     data.to_excel(f"export/{now}-{corpora_str}-{cols_str}.xlsx")
 
 

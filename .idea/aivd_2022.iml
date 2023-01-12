@@ -4,6 +4,9 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/aivd_2022/exercise23/export/12" />
       <excludeFolder url="file://$MODULE_DIR$/aivd_2022/exercise23/export" />
+      <excludeFolder url="file://$MODULE_DIR$/aivd_2022/exercise11/export" />
+      <excludeFolder url="file://$MODULE_DIR$/aivd_2022/exercise8/export" />
+      <excludeFolder url="file://$MODULE_DIR$/aivd_2022/exercise11/data" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.10 (aivd2022)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
